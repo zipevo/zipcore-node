@@ -1,13 +1,13 @@
 {
-  "name": "@dashevo/bitcore-node",
-  "description": "Full node with extended capabilities using Bitcore and Dash Core",
+  "name": "@dashevo/dashcore-node",
+  "description": "Full node with extended capabilities using Dashcore and Dash Core (dashd)",
   "author": "BitPay <dev@bitpay.com>",
   "version": "3.0.6",
   "main": "./index.js",
-  "repository": "git://github.com/dashevo/bitcore-node-dash.git",
-  "homepage": "https://github.com/dashevo/bitcore-node-dash",
+  "repository": "git://github.com/dashevo/dashcore-node.git",
+  "homepage": "https://github.com/dashevo/dashcore-node",
   "bugs": {
-    "url": "https://github.com/dashevo/bitcore-node-dash/issues"
+    "url": "https://github.com/dashevo/dashcore-node/issues"
   },
   "contributors": [
     {
@@ -27,11 +27,9 @@
     }
   ],
   "bin": {
-    "bitcore-node-dash": "./bin/bitcore-node-dash"
+    "bitcore-node-dash": "./bin/dashcore-node"
   },
   "scripts": {
-    "preinstall": "./scripts/download",
-    "verify": "./scripts/download --skip-bitcoin-download --verify-bitcoin-download",
     "test": "mocha -R spec --recursive",
     "regtest": "./scripts/regtest",
     "jshint": "jshint --reporter=node_modules/jshint-stylish ./lib",
