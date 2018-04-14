@@ -1,6 +1,6 @@
 {
   "name": "@dashevo/dashcore-node",
-  "description": "Full node with extended capabilities using Dashcore and Dashd",
+  "description": "Full node with extended capabilities using Dashcore and Dash Core (dashd)",
   "author": "BitPay <dev@bitpay.com>",
   "version": "3.0.6",
   "main": "./index.js",
