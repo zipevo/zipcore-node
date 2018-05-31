@@ -3,10 +3,48 @@ Dashcore Node
 
 A Dash full node for building applications and services with Node.js. A node is extensible and can be configured to run additional services. At the minimum a node has an interface to [Dash Core (dashd) v0.12.1.x](https://github.com/dashpay/dash/tree/v0.12.1.x) for more advanced address queries. Additional services can be enabled to make a node more useful such as exposing new APIs, running a block explorer and wallet service.
 
-## Install
+## Usages
+
+### As a standalone server
 
 ```bash
-npm install -g @dashevo/dashcore-node
+git clone https://github.com/dashevo/dashcore-node
+cd dashcore-node
+./bin/dashcore-node start
+```
+
+When running the start command, it will seek for a .dashcore folder with a dashcore-node.json conf file.
+If it doesn't exist, it will create it, with basic task to connect to dashd.
+
+Some plugins are available :
+
+- Insight-API : `./bin/dashcore-node addservice @dashevo/insight-api
+- Insight-UI : `./bin/dashcore-node addservice @dashevo/insight-ui`
+
+You also might want to add these index to your dash.conf file :
+```
+-addressindex
+-timestampindex
+-spentindex
+```
+
+### As a library
+
+```bash
+npm install @dashevo/dashcore-node
+```
+
+```javascript
+const dashcore = require('@dashevo/dashcore-node');
+const config = require('./dashcore-node.json');
+
+let node = dashcore.scaffold.start({ path: "", config: config });
+node.on('ready', function() {
+    //Dash core started
+    dashd.on('tx', function(txData) {
+        let tx = new dashcore.lib.Transaction(txData);
+    });
+});
 ```
 
 ## Prerequisites
@@ -31,7 +69,7 @@ dashcore-node start
 
 This will create a directory with configuration files for your node and install the necessary dependencies.
 
-Please note that [Dashs v0.12.1.x](https://github.com/dashpay/dash/tree/v0.12.1.x) will be downloaded automatically. Once completed the dashd binary should be placed into the &lt;dash-data-dir&gt; folder specified during node creation.
+Please note that [Dash Core](https://github.com/dashpay/dash/tree/master) needs to be installed first.
 
 For more information about (and developing) services, please see the [Service Documentation](docs/services.md).
 
@@ -47,12 +85,37 @@ There are several add-on services available to extend the functionality of Bitco
 
 - [Upgrade Notes](docs/upgrade.md)
 - [Services](docs/services.md)
-  - [Bitcoind](docs/services/bitcoind.md) - Interface to Bitcoin Core
+  - [Dashd](docs/services/dashd.md) - Interface to Dash Core
   - [Web](docs/services/web.md) - Creates an express application over which services can expose their web/API content
 - [Development Environment](docs/development.md) - Guide for setting up a development environment
 - [Node](docs/node.md) - Details on the node constructor
 - [Bus](docs/bus.md) - Overview of the event bus constructor
 - [Release Process](docs/release.md) - Information about verifying a release and the release process.
+
+
+## Setting up dev environment (with Insight)
+
+Prerequisite : Having a dashd node already runing `dashd --daemon`.
+
+Dashcore-node : `git clone https://github.com/dashevo/dashcore-node -b develop`
+Insight-api (optional) : `git clone https://github.com/dashevo/insight-api -b develop`
+Insight-UI (optional) : `git clone https://github.com/dashevo/insight-ui -b develop`
+
+Install them :
+```
+cd dashcore-node && npm install \
+ && cd ../insight-ui && npm install \
+ && cd ../insight-api && npm install && cd ..
+```
+
+Symbolic linking in parent folder :
+```
+npm link ../insight-api
+npm link ../insight-ui
+```
+
+Start with `./bin/dashcore-node start` to first generate a ~/.dashcore/dashcore-node.json file.
+Append this file with `"@dashevo/insight-ui"` and `"@dashevo/insight-api"` in the services array.
 
 ## Contributing
 

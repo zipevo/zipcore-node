@@ -3,7 +3,7 @@
 var should = require('chai').should();
 var sinon = require('sinon');
 var proxyquire = require('proxyquire');
-var BitcoinService = require('../../lib/services/bitcoind');
+var DashService = require('../../lib/services/dashd');
 var index = require('../../lib');
 var log = index.log;
 
@@ -19,12 +19,12 @@ describe('#start', function() {
 
   describe('will dynamically create a node from a configuration', function() {
 
-    it('require each bitcore-node-dash service with default config', function(done) {
+    it('require each dashcore-node service with default config', function(done) {
       var node;
       var TestNode = function(options) {
         options.services[0].should.deep.equal({
-          name: 'bitcoind',
-          module: BitcoinService,
+          name: 'dashd',
+          module: DashService,
           config: {
             spawn: {
               datadir: './data'
@@ -48,10 +48,10 @@ describe('#start', function() {
         path: __dirname,
         config: {
           services: [
-            'bitcoind'
+            'dashd'
           ],
           servicesConfig: {
-            bitcoind: {
+            dashd: {
               spawn: {
                 datadir: './data'
               }
@@ -87,12 +87,12 @@ describe('#start', function() {
         done();
       });
     });
-    it('require each bitcore-node-dash service with explicit config', function(done) {
+    it('require each dashcore-node service with explicit config', function(done) {
       var node;
       var TestNode = function(options) {
         options.services[0].should.deep.equal({
-          name: 'bitcoind',
-          module: BitcoinService,
+          name: 'dashd',
+          module: DashService,
           config: {
             param: 'test',
             spawn: {
@@ -116,10 +116,10 @@ describe('#start', function() {
         path: __dirname,
         config: {
           services: [
-            'bitcoind'
+            'dashd'
           ],
           servicesConfig: {
-            'bitcoind': {
+            'dashd': {
               param: 'test',
               spawn: {
                 datadir: './data'

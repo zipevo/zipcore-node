@@ -1,15 +1,15 @@
 'use strict';
 
 var benchmark = require('benchmark');
-var bitcoin = require('bitcoin');
+var dashdRPC = require('@dashevo/dashd-rpc');
 var async = require('async');
 var maxTime = 20;
 
-console.log('Bitcoin Service native interface vs. Bitcoin JSON RPC interface');
+console.log('Dash Service native interface vs. Dash JSON RPC interface');
 console.log('----------------------------------------------------------------------');
 
-// To run the benchmarks a fully synced Bitcore Core directory is needed. The RPC comands
-// can be modified to match the settings in bitcoin.conf.
+// To run the benchmarks a fully synced Dash Core directory is needed. The RPC comands
+// can be modified to match the settings in dash.conf.
 
 var fixtureData = {
   blockHashes: [
@@ -26,34 +26,34 @@ var fixtureData = {
   ]
 };
 
-var bitcoind = require('../').services.Bitcoin({
+var dashd = require('../').services.Dash({
   node: {
-    datadir: process.env.HOME + '/.bitcoin',
+    datadir: process.env.HOME + '/.dash',
     network: {
       name: 'testnet'
     }
   }
 });
 
-bitcoind.on('error', function(err) {
+dashd.on('error', function(err) {
   console.error(err.message);
 });
 
-bitcoind.start(function(err) {
+dashd.start(function(err) {
   if (err) {
     throw err;
   }
-  console.log('Bitcoin Core started');
+  console.log('Dash Core started');
 });
 
-bitcoind.on('ready', function() {
+dashd.on('ready', function() {
 
-  console.log('Bitcoin Core ready');
+  console.log('Dash Core ready');
 
-  var client = new bitcoin.Client({
+  var client = new dashdRPC({
     host: 'localhost',
     port: 18332,
-    user: 'bitcoin',
+    user: 'dash',
     pass: 'local321'
   });
 
@@ -64,12 +64,12 @@ bitcoind.on('ready', function() {
       var hashesLength = fixtureData.blockHashes.length;
       var txLength = fixtureData.txHashes.length;
 
-      function bitcoindGetBlockNative(deffered) {
+      function dashdGetBlockNative(deffered) {
         if (c >= hashesLength) {
           c = 0;
         }
         var hash = fixtureData.blockHashes[c];
-        bitcoind.getBlock(hash, function(err, block) {
+        dashd.getBlock(hash, function(err, block) {
           if (err) {
             throw err;
           }
@@ -78,7 +78,7 @@ bitcoind.on('ready', function() {
         c++;
       }
 
-      function bitcoindGetBlockJsonRpc(deffered) {
+      function dashdGetBlockJsonRpc(deffered) {
         if (c >= hashesLength) {
           c = 0;
         }
@@ -92,12 +92,12 @@ bitcoind.on('ready', function() {
         c++;
       }
 
-      function bitcoinGetTransactionNative(deffered) {
+      function dashGetTransactionNative(deffered) {
         if (c >= txLength) {
           c = 0;
         }
         var hash = fixtureData.txHashes[c];
-        bitcoind.getTransaction(hash, true, function(err, tx) {
+        dashd.getTransaction(hash, true, function(err, tx) {
           if (err) {
             throw err;
           }
@@ -106,7 +106,7 @@ bitcoind.on('ready', function() {
         c++;
       }
 
-      function bitcoinGetTransactionJsonRpc(deffered) {
+      function dashGetTransactionJsonRpc(deffered) {
         if (c >= txLength) {
           c = 0;
         }
@@ -122,22 +122,22 @@ bitcoind.on('ready', function() {
 
       var suite = new benchmark.Suite();
 
-      suite.add('bitcoind getblock (native)', bitcoindGetBlockNative, {
+      suite.add('dashd getblock (native)', dashdGetBlockNative, {
         defer: true,
         maxTime: maxTime
       });
 
-      suite.add('bitcoind getblock (json rpc)', bitcoindGetBlockJsonRpc, {
+      suite.add('dashd getblock (json rpc)', dashdGetBlockJsonRpc, {
         defer: true,
         maxTime: maxTime
       });
 
-      suite.add('bitcoind gettransaction (native)', bitcoinGetTransactionNative, {
+      suite.add('dashd gettransaction (native)', dashGetTransactionNative, {
         defer: true,
         maxTime: maxTime
       });
 
-      suite.add('bitcoind gettransaction (json rpc)', bitcoinGetTransactionJsonRpc, {
+      suite.add('dashd gettransaction (json rpc)', dashGetTransactionJsonRpc, {
         defer: true,
         maxTime: maxTime
       });
@@ -158,7 +158,7 @@ bitcoind.on('ready', function() {
       throw err;
     }
     console.log('Finished');
-    bitcoind.stop(function(err) {
+    dashd.stop(function(err) {
       if (err) {
         console.error('Fail to stop services: ' + err);
         process.exit(1);
