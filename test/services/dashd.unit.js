@@ -35,7 +35,7 @@ describe('Dash Service', function() {
     },
     spawn: {
       datadir: 'testdir',
-      exec: 'testpath'
+      exec: 'testpath',
     }
   };
 
@@ -1486,7 +1486,7 @@ describe('Dash Service', function() {
         return socket;
       };
       var DashService = proxyquire('../../lib/services/dashd', {
-        zmq: {
+        zeromq: {
           socket: socketFunc
         }
       });
@@ -5395,12 +5395,11 @@ describe('Dash Service', function() {
                 }
 		    }
 	    });
-	    
+
 	    dashd.getMNList(function(err, MNList) {
 		    if (err) {
 			    return done(err);
 		    }
-		    
 		    MNList.length.should.equal(2);
 		    MNList[0].vin.should.equal("06c4c53b64019a021e8597c19e40807038cab4cd422ca9241db82aa19887354b-0");
 		    MNList[0].status.should.equal("ENABLED");
