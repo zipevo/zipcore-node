@@ -5479,7 +5479,7 @@ describe('Dash Service', function() {
 
       dashd.getMNList(function(err, MNList) {
         err.should.be.instanceof(Error);
-        console.log(err);
+        err.message.should.be.equal('Blockchain is not synced yet');
         done();
       });
     });
