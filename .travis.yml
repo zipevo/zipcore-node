@@ -18,3 +18,11 @@ script:
   - npm run check-package
   - npm run test
   - npm run jshint
+
+deploy:
+  - provider: script
+    skip_cleanup: true
+    script: bash scripts/travis-deploy.sh
+    on:
+      repo: dashevo/dashcore-node
+      tags: true
