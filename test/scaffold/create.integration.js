@@ -19,7 +19,6 @@ var create = proxyquire('../../lib/scaffold/create', {
   }
 });
 var fs = require('fs');
-var mkdirp = require('mkdirp');
 var rimraf = require('rimraf');
 
 describe('#create', function() {
@@ -29,11 +28,11 @@ describe('#create', function() {
 
   before(function(done) {
     // setup testing directories
-    mkdirp(testDir, function(err) {
+    fs.mkdir(testDir, { recursive: true }, function(err) {
       if (err) {
         throw err;
       }
-      mkdirp(testDir + '/.dash', function(err) {
+      fs.mkdir(testDir + '/.dash', { recursive: true }, function(err) {
         if (err) {
           throw err;
         }
@@ -66,9 +65,11 @@ describe('#create', function() {
 
       var configPath = testDir + '/mynode/dashcore-node.json';
       var packagePath = testDir + '/mynode/package.json';
+      var dataPath = testDir + '/mynode/data';
 
       should.equal(fs.existsSync(configPath), true);
       should.equal(fs.existsSync(packagePath), true);
+      should.equal(fs.existsSync(dataPath), true);
 
       var config = JSON.parse(fs.readFileSync(configPath));
       config.services.should.deep.equal(['dashd', 'web']);
