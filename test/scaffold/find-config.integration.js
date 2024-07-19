@@ -22,7 +22,7 @@ describe('#findConfig', function() {
         throw err;
       }
       fs.writeFile(
-        testDir + '/p2/dashcore-node.json',
+        testDir + '/p2/zipcore-node.json',
         JSON.stringify(expectedConfig),
         function() {
           fs.mkdir(testDir + '/e0', { recursive: true }, function(err) {

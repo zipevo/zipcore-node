@@ -32,7 +32,7 @@ describe('#create', function() {
       if (err) {
         throw err;
       }
-      fs.mkdir(testDir + '/.dash', { recursive: true }, function(err) {
+      fs.mkdir(testDir + '/.zip', { recursive: true }, function(err) {
         if (err) {
           throw err;
         }
@@ -63,7 +63,7 @@ describe('#create', function() {
         throw err;
       }
 
-      var configPath = testDir + '/mynode/dashcore-node.json';
+      var configPath = testDir + '/mynode/zipcore-node.json';
       var packagePath = testDir + '/mynode/package.json';
       var dataPath = testDir + '/mynode/data';
 
@@ -72,7 +72,7 @@ describe('#create', function() {
       should.equal(fs.existsSync(dataPath), true);
 
       var config = JSON.parse(fs.readFileSync(configPath));
-      config.services.should.deep.equal(['dashd', 'web']);
+      config.services.should.deep.equal(['zipd', 'web']);
       config.network.should.equal('livenet');
 
       var pack = JSON.parse(fs.readFileSync(packagePath));
@@ -104,7 +104,7 @@ describe('#create', function() {
       dirname: 'mynode3',
       name: 'My Node 3',
       isGlobal: true,
-      datadir: '../.dash'
+      datadir: '../.zip'
     }, function(err) {
       if (err) {
         throw err;
@@ -139,7 +139,7 @@ describe('#create', function() {
       dirname: 'mynode4',
       name: 'My Node 4',
       isGlobal: false,
-      datadir: '../.dash'
+      datadir: '../.zip'
     }, function(err) {
       should.exist(err);
       err.message.should.equal('There was an error installing dependencies.');

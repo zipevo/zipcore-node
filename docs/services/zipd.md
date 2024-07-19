@@ -1,38 +1,38 @@
-# Dash Service
+# Zip Service
 
-The Dash Service is a Node.js interface to [Dash Core](https://github.com/dashpay/dash) for querying information about the Dash block chain. It will connect to a running `dashd` process. It uses additional, optional indexes in Dash Core for querying information about addresses and blocks. Results are cached for performance and there are several additional API methods added for common queries.
+The Zip Service is a Node.js interface to [Zip Core](https://github.com/zippay/zip) for querying information about the Zip block chain. It will connect to a running `zipd` process. It uses additional, optional indexes in Zip Core for querying information about addresses and blocks. Results are cached for performance and there are several additional API methods added for common queries.
 
 ## Configuration
 
-The configuration should include a "connect" configuration in "dashd". This defines the JSONRPC connection information for separately managed `dashd` processes. It's also possible to connect to several separately managed `dashd` processes with round-robin querying, for example:
+The configuration should include a "connect" configuration in "zipd". This defines the JSONRPC connection information for separately managed `zipd` processes. It's also possible to connect to several separately managed `zipd` processes with round-robin querying, for example:
 
 ```json5
 {
   // ...
   "services": [
-    "dashd"
+    "zipd"
   ],
   "servicesConfig": {
-    "dashd": {
+    "zipd": {
       "connect": [
         {
           "rpchost": "127.0.0.1",
           "rpcport": 30521,
-          "rpcuser": "dashrpc",
+          "rpcuser": "ziprpc",
           "rpcpassword": "local321",
           "zmqpubrawtx": "tcp://127.0.0.1:30611"
         },
         {
           "rpchost": "127.0.0.1",
           "rpcport": 30522,
-          "rpcuser": "dashrpc",
+          "rpcuser": "ziprpc",
           "rpcpassword": "local321",
           "zmqpubrawtx": "tcp://127.0.0.1:30622"
         },
         {
           "rpchost": "127.0.0.1",
           "rpcport": 30523,
-          "rpcuser": "dashrpc",
+          "rpcuser": "ziprpc",
           "rpcpassword": "local321",
           "zmqpubrawtx": "tcp://127.0.0.1:30633"
         }
@@ -49,7 +49,7 @@ The configuration should include a "connect" configuration in "dashd". This defi
 Methods are available by directly interfacing with the service:
 
 ```js
-node.services.dashd.<methodName>
+node.services.zipd.<methodName>
 ```
 
 ### Chain
@@ -60,12 +60,12 @@ node.services.dashd.<methodName>
 // gives the block hashes sorted from low to high within a range of timestamps
 var high = 1460393372; // Mon Apr 11 2016 12:49:25 GMT-0400 (EDT)
 var low = 1460306965; // Mon Apr 10 2016 12:49:25 GMT-0400 (EDT)
-node.services.dashd.getBlockHashesByTimestamp(high, low, function(err, blockHashes) {
+node.services.zipd.getBlockHashesByTimestamp(high, low, function(err, blockHashes) {
   //...
 });
 
 // get the current tip of the chain
-node.services.dashd.getBestBlockHash(function(err, blockHash) {
+node.services.zipd.getBestBlockHash(function(err, blockHash) {
   //...
 })
 ```
@@ -74,17 +74,17 @@ node.services.dashd.getBestBlockHash(function(err, blockHash) {
 
 ```js
 // gives a boolean if the daemon is fully synced (not the initial block download)
-node.services.dashd.isSynced(function(err, synced) {
+node.services.zipd.isSynced(function(err, synced) {
   //...
 })
 
 // gives the current estimate of blockchain download as a percentage
-node.services.dashd.syncPercentage(function(err, percent) {
+node.services.zipd.syncPercentage(function(err, percent) {
   //...
 });
 
 // gives information about the chain including total number of blocks
-node.services.dashd.getInfo(function(err, info) {
+node.services.zipd.getInfo(function(err, info) {
   //...
 });
 ```
@@ -94,7 +94,7 @@ node.services.dashd.getInfo(function(err, info) {
 ```js
 // will generate a block for the "regtest" network (development purposes)
 var numberOfBlocks = 10;
-node.services.dashd.generateBlock(numberOfBlocks, function(err, blockHashes) {
+node.services.zipd.generateBlock(numberOfBlocks, function(err, blockHashes) {
   //...
 });
 ```
@@ -107,7 +107,7 @@ It's possible to query blocks by both block hash and by height. Blocks are given
 
 ```js
 var blockHeight = 0;
-node.services.dashd.getRawBlock(blockHeight, function(err, blockBuffer) {
+node.services.zipd.getRawBlock(blockHeight, function(err, blockBuffer) {
   if (err) {
     throw err;
   }
@@ -116,17 +116,17 @@ node.services.dashd.getRawBlock(blockHeight, function(err, blockBuffer) {
 };
 
 // get a bitcore object of the block (as above)
-node.services.dashd.getBlock(blockHash, function(err, block) {
+node.services.zipd.getBlock(blockHash, function(err, block) {
   //...
 };
 
 // get only the block header and index (including chain work, height, and previous hash)
-node.services.dashd.getBlockHeader(blockHeight, function(err, blockHeader) {
+node.services.zipd.getBlockHeader(blockHeight, function(err, blockHeader) {
   //...
 });
 
 // get the block with a list of txids
-node.services.dashd.getBlockOverview(blockHash, function(err, blockOverview) {
+node.services.zipd.getBlockOverview(blockHash, function(err, blockOverview) {
   //...
 };
 ```
@@ -137,7 +137,7 @@ Get a transaction asynchronously by reading it from disk:
 
 ```js
 var txid = '3dba349df7225e071179256eea2195083cd89985124be3b05e48de509cf1e268';
-node.services.dashd.getRawTransaction(txid, function(err, transactionBuffer) {
+node.services.zipd.getRawTransaction(txid, function(err, transactionBuffer) {
   if (err) {
     throw err;
   }
@@ -145,12 +145,12 @@ node.services.dashd.getRawTransaction(txid, function(err, transactionBuffer) {
 });
 
 // get a bitcore object of the transaction (as above)
-node.services.dashd.getTransaction(txid, function(err, transaction) {
+node.services.zipd.getTransaction(txid, function(err, transaction) {
   //...
 });
 
 // retrieve the transaction with input values, fees, spent and block info
-node.services.dashd.getDetailedTransaction(txid, function(err, transaction) {
+node.services.zipd.getDetailedTransaction(txid, function(err, transaction) {
   //...
 });
 ```
@@ -159,11 +159,11 @@ Send a transaction to the network:
 
 ```js
 var numberOfBlocks = 3;
-node.services.dashd.estimateFee(numberOfBlocks, function(err, feesPerKilobyte) {
+node.services.zipd.estimateFee(numberOfBlocks, function(err, feesPerKilobyte) {
   //...
 });
 
-node.services.dashd.sendTransaction(transaction.serialize(), function(err, hash) {
+node.services.zipd.sendTransaction(transaction.serialize(), function(err, hash) {
   //...
 });
 ```
@@ -176,7 +176,7 @@ One of the most common uses will be to retrieve unspent outputs necessary to cre
 
 ```js
 var address = 'yegvhonA7HaRvBqp57RVncFAuuqRbMQNXk';
-node.services.dashd.getAddressUnspentOutputs(address, options, function(err, unspentOutputs) {
+node.services.zipd.getAddressUnspentOutputs(address, options, function(err, unspentOutputs) {
   // see below
 });
 ```
@@ -201,7 +201,7 @@ The `unspentOutputs` will have the format:
 
 ```js
 var address = 'yTyBtDZp16HtS1jpNd1vD11y6LSyvm1XzX';
-node.services.dashd.getAddressBalance(address, options, function(err, balance) {
+node.services.zipd.getAddressBalance(address, options, function(err, balance) {
   // balance will be in satoshis with "received" and "balance"
 });
 ```
@@ -217,7 +217,7 @@ var options = {
   end: 344000,
   queryMempool: true
 };
-node.services.dashd.getAddressHistory(addresses, options, function(err, history) {
+node.services.zipd.getAddressHistory(addresses, options, function(err, history) {
   // see below
 });
 ```
@@ -250,7 +250,7 @@ var options = {
   noTxList: false
 };
 
-node.services.dashd.getAddressSummary(address, options, function(err, summary) {
+node.services.zipd.getAddressSummary(address, options, function(err, summary) {
   // see below
 });
 ```
@@ -279,43 +279,43 @@ The `summary` will have the format (values are in satoshis):
 
 
 ## Events
-The Dash Service exposes two events via the Bus, and there are a few events that can be directly registered:
+The Zip Service exposes two events via the Bus, and there are a few events that can be directly registered:
 
 ```js
-node.services.dashd.on('tip', function(blockHash) {
+node.services.zipd.on('tip', function(blockHash) {
   // a new block tip has been added, if there is a rapid update (with a second) this will not emit every tip update
 });
 
-node.services.dashd.on('tx', function(transactionBuffer) {
+node.services.zipd.on('tx', function(transactionBuffer) {
   // a new transaction has entered the mempool
 });
 
-node.services.dashd.on('block', function(blockHash) {
+node.services.zipd.on('block', function(blockHash) {
   // a new block has been added
 });
 ```
 
 For details on instantiating a bus for a node, see the [Bus Documentation](../bus.md).
-- Name: `dashd/rawtransaction`
-- Name: `dashd/hashblock`
-- Name: `dashd/addresstxid`, Arguments: [address, address...]
+- Name: `zipd/rawtransaction`
+- Name: `zipd/hashblock`
+- Name: `zipd/addresstxid`, Arguments: [address, address...]
 
 **Examples:**
 
 ```js
-bus.subscribe('dashd/rawtransaction');
-bus.subscribe('dashd/hashblock');
-bus.subscribe('dashd/addresstxid', ['XxoNntPX7RNFKHUhuGNUthb1UQpYnKuCsk']);
+bus.subscribe('zipd/rawtransaction');
+bus.subscribe('zipd/hashblock');
+bus.subscribe('zipd/addresstxid', ['XxoNntPX7RNFKHUhuGNUthb1UQpYnKuCsk']);
 
-bus.on('dashd/rawtransaction', function(transactionHex) {
+bus.on('zipd/rawtransaction', function(transactionHex) {
   //...
 });
 
-bus.on('dashd/hashblock', function(blockhashHex) {
+bus.on('zipd/hashblock', function(blockhashHex) {
   //...
 });
 
-bus.on('dashd/addresstxid', function(data) {
+bus.on('zipd/addresstxid', function(data) {
   // data.address;
   // data.txid;
 });

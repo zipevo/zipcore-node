@@ -1,0 +1,4 @@
+#!/usr/bin/env node
+
+var zipcore = require('../lib/cli/zipcore');
+zipcore();
